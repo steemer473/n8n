@@ -1,5 +1,5 @@
-# Use the official n8n base image or build from source
-FROM node:18-alpine
+# Use Node.js 22 (required by n8n)
+FROM node:22-alpine
 
 # Set working directory
 WORKDIR /data
@@ -12,17 +12,22 @@ RUN apk add --no-cache \
     cairo-dev \
     pango-dev \
     jpeg-dev \
-    giflib-dev
+    giflib-dev \
+    librsvg-dev
 
-# Clone and build n8n from your fork (or use the repo directly)
-# Note: Render will clone your repo, so we'll use the local files
+# Copy the n8n source code
 COPY . /usr/src/n8n
 
 WORKDIR /usr/src/n8n
 
-# Install dependencies and build
-RUN npm install -g pnpm
+# Install pnpm
+RUN npm install -g pnpm@10.18.3
+
+# Install dependencies with increased memory
+ENV NODE_OPTIONS="--max-old-space-size=4096"
 RUN pnpm install --frozen-lockfile
+
+# Build n8n
 RUN pnpm build
 
 # Install n8n globally
