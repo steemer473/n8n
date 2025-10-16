@@ -3,7 +3,7 @@ services:
     name: n8n-service
     runtime: docker
     plan: free  # Can upgrade to 'starter' or 'standard' later
-    branch: main  # Or your custom branch name
+    branch: master  # Or your custom branch name
     dockerfilePath: ./Dockerfile
     envVars:
       - key: N8N_PORT
